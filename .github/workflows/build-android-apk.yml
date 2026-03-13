@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -13,13 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
 
-      - name: Setup Java 17
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,23 +30,24 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Install Android packages
+      - name: Accept licenses and install Android packages
         run: |
           yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Install npm dependencies
-        run: npm install
+      - name: Setup Gradle cache
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: Build debug APK
-        working-directory: android
-        run: gradle assembleDebug --no-daemon
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
 
-      - name: Upload APK artifact
+      - name: Build debug APK with wrapper
+        run: |
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: presence-badge-debug-apk
+          name: app-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
