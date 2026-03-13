@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Remove invalid Gradle wrapper jar
+        run: rm -f android/gradle/wrapper/gradle-wrapper.jar
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,6 +33,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+
       - name: Install Android packages
         run: |
           yes | sdkmanager --licenses
@@ -37,9 +45,6 @@ jobs:
 
       - name: Install npm dependencies
         run: npm install
-
-      - name: Remove invalid wrapper jar
-        run: rm -f android/gradle/wrapper/gradle-wrapper.jar
 
       - name: Build debug APK
         working-directory: android
