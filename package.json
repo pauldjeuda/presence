@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "start": "react-native start",
-    "clean:android": "cd android && gradle clean"
+    "clean:android": "cd android && ./gradlew clean"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

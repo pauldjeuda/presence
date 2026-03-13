@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-# Placeholder wrapper script.
-# In GitHub Actions this project builds with the system Gradle installed by the workflow.
-# If you want local wrapper-based builds, regenerate the wrapper with: gradle wrapper
-
-gradle "$@"
